@@ -1,0 +1,35 @@
+---
+version: "3.9"
+services:
+  service-goatcounter:
+    #image: patrickdung/goatcounter:v2.1.0
+    image: patrickdung/goatcounter:latest
+    pull_policy: always
+    container_name: "container-goatcounter"
+    hostname: "container-goatcounter"
+    environment:
+      # This section only effective if GOATCOUNTER_INITDB is true
+      # ---------
+      # Only create db inside goatcounter if it is set to true
+      - GOATCOUNTER_INITDB=true
+      - GOATCOUNTER_VHOST=analytics.example.org
+      - GOATCOUNTER_ADMIN_EMAIL=email@example.org
+      # use .env
+      #- GOATCOUNTER_PASSWORD=password
+      - GOATCOUNTER_PASSWORD=${GOATCOUNTER_PASSWORD:?GOATCOUNTER_PASSWORD not set}
+      # --------- 
+      # default SQLite, change it to use PGSQL
+      #- GOATCOUNTER_DB=sqlite://db/goatcounter.sqlite3?_busy_timeout=200&_journal_mode=wal&cache=shared
+      #- GOATCOUNTER_DB=postgresql://
+      #- PGHOST=db01
+      #- PGPORT=5432
+      #- PGDATABSASE=goatcounterdb
+      #- PGUSER=goatcounteruser
+      # use .env
+      #- PGPASSWORD=goatcounterpassword
+    volumes:
+      - /data/goatcounter/db:/home/goatcounter/db
+    port:
+      - 127.0.0.1:8080:8080
+    cap_drop:
+      - ALL
