@@ -12,7 +12,7 @@ jobs:
           curl -sL https://api.github.com/repos/arp242/goatcounter/releases/latest | \
           jq -r ".tag_name" > /tmp/goatcounter-latest-branch-name
           echo "REMOTE_BRANCH_NAME=$(cat /tmp/goatcounter-latest-branch-name)" >> $GITHUB_ENV
-          curl -sL https://github.com/patrickdung/goatcounter-crossbuild/raw/main/release-versions/goatcounter-latest.txt -o /tmp/goatcounter-local-branch-name
+          curl -sL https://github.com/patrickdung/goatcounter-container/raw/main/release-versions/goatcounter-latest.txt -o /tmp/goatcounter-local-branch-name
           echo "LOCAL_BRANCH_NAME=$(cat /tmp/goatcounter-local-branch-name)" >> $GITHUB_ENV
       - name: Check for modified files
         id: git-check
