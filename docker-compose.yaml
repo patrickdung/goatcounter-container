@@ -7,6 +7,8 @@ services:
     pull_policy: always
     container_name: "container-goatcounter"
     hostname: "container-goatcounter"
+    env_file:
+      - .env
     environment:
       # This section only effective if GOATCOUNTER_INITDB is true
       # ---------
@@ -29,7 +31,7 @@ services:
       #- PGPASSWORD=goatcounterpassword
     volumes:
       - /data/goatcounter/db:/home/goatcounter/db
-    port:
+    ports:
       - 127.0.0.1:8080:8080
     cap_drop:
       - ALL

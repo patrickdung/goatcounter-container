@@ -10,6 +10,5 @@ Please check the header of the file.
 - Source code from other repo(s):
   - [Dockerfile, entrypoint.sh and goatcounter.sh, MIT](https://github.com/baethon/docker-goatcounter/)
 
-- There may be problem using PostgreSQL
-  - There are manual steps for using it with PostgreSQL (not tested)
+- There may be problems using PostgreSQL (not fully tested)
   - Refer to [this issue for details](https://github.com/arp242/goatcounter/issues/509)
