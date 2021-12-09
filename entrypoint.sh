@@ -15,7 +15,7 @@ create_site ()
   fi
 
   /home/goatcounter/bin/goatcounter db create site \
-    -createdb
+    -createdb \
     -vhost "${GOATCOUNTER_VHOST}" \
     -user.email "${GOATCOUNTER_ADMIN_EMAIL}" \
     -user.password "${GOATCOUNTER_PASSWORD}" \
