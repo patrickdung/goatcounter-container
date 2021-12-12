@@ -90,14 +90,14 @@ jobs:
         run: |
           skopeo inspect --raw docker://${{env.GITLAB_CONTAINER_BASE_URI}}:${{env.REMOTE_BRANCH_NAME}} | \
             jq -r '.manifests[] | select(.platform .architecture=="amd64" and .platform .os=="linux") | .digest' > /tmp/container-digest-amd64
-          echo "::set-output name=container_digest::$(echo ${{env.GITLAB_CONTAINER_BASE_URI}}@$(cat /tmp/container-digest-amd64))"
+          echo "::set-output name=container_digest::$(cat /tmp/container-digest-amd64)"
 
       - name: "Get the digest of container (arm64)"
         id: get-container-digest-arm64
         run: |
           skopeo inspect --raw docker://${{env.GITLAB_CONTAINER_BASE_URI}}:${{env.REMOTE_BRANCH_NAME}} | \
             jq -r '.manifests[] | select(.platform .architecture=="arm64" and .platform .os=="linux") | .digest' > /tmp/container-digest-arm64
-          echo "::set-output name=container_digest::$(echo ${{env.GITLAB_CONTAINER_BASE_URI}}@$(cat /tmp/container-digest-arm64))"
+          echo "::set-output name=container_digest::$(cat /tmp/container-digest-arm64)"
 
       - name: Use Cosign to sign the image recursively
         env:
