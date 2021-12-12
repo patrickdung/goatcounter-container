@@ -292,7 +292,7 @@ jobs:
             ./*.sarif
 
   build-tag-latest:
-    needs: [build-sbom-and-scanning]
+    needs: [build-docker-image,build-sbom-and-scanning]
     name: Tag the latest containers
     runs-on: ubuntu-latest
     continue-on-error: true
