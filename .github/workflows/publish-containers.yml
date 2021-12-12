@@ -26,7 +26,7 @@ jobs:
       # GH action/scanners for sarif reports
       security-events: write
       statuses: none
-      # id-token: write # needed for signing the images with GitHub OIDC **not production ready**
+      id-token: read
     outputs:
       remote_branch_name: ${{ steps.get-remote-branch-name.outputs.remote_branch_name }}
       gitlab_container_base_uri: ${{ steps.set-outputs.outputs.gitlab_container_base_uri }}
@@ -125,6 +125,7 @@ jobs:
       # GH action/scanners for sarif reports
       security-events: write
       statuses: none
+      id-token: read
       # id-token: write # needed for signing the images with GitHub OIDC **not production ready**
     strategy:
       # Anchore action produce the same filename for sarif on different platform
@@ -290,6 +291,33 @@ jobs:
             # #${{ steps.scan-by-anchore.outputs.sarif }}
             ./*.sarif
 
+  build-tag-latest:
+    needs: [build-sbom-and-scanning]
+    name: Tag the latest containers
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      actions: none
+      checks: none
+      contents: none
+      deployments: none
+      issues: none
+      packages: none
+      pull-requests: none
+      repository-projects: none
+      security-events: none
+      statuses: none
+      id-token: read
+    steps:
+      - name: Set env REMOTE_BRANCH_NAME
+        run: |
+          echo "REMOTE_BRANCH_NAME=${{ needs.build-docker-image.outputs.remote_branch_name }}" >> $GITHUB_ENV
+      - name: Login to Registry provider
+        uses: docker/login-action@v1
+        with:
+          registry: registry.gitlab.com
+          username: ${{ secrets.GITLAB_USERNAME }}
+          password: ${{ secrets.GITLAB_TOKEN }}
       - name: Add the latest tag to the container image
         run: |
           skopeo copy --all docker://${{env.GITLAB_CONTAINER_BASE_URI}}:${{env.REMOTE_BRANCH_NAME}} docker://${{env.GITLAB_CONTAINER_BASE_URI}}:latest

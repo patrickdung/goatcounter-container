@@ -9,3 +9,5 @@ Please check the header of the file.
 
 - There may be problems using PostgreSQL (not fully tested)
   - Refer to [this issue for details](https://github.com/arp242/goatcounter/issues/509)
+
+The SARIF reports may not be ready because Trivy/Anchore has not yet support AlmaLinux.
