@@ -29,10 +29,17 @@ jobs:
       # id-token: write # needed for signing the images with GitHub OIDC **not production ready**
     outputs:
       remote_branch_name: ${{ steps.get-remote-branch-name.outputs.remote_branch_name }}
+      gitlab_container_base_uri: ${{ steps.set-outputs.outputs.gitlab_container_base_uri }}
       container_digest_amd64: ${{ steps.get-container-digest-amd64.outputs.container_digest }}
       container_digest_arm64: ${{ steps.get-container-digest-arm64.outputs.container_digest }}
     steps:
+      - name: Set outputs for this job
+        id: set-outputs
+        run: |
+          echo "::set-output name=gitlab_container_base_uri::$(echo $GITLAB_CONTAINER_BASE_URI)"
+
       - name: Fetch branch name (tag) of latest release
+        id: get-remote-branch-name
         run: |
           curl -sL https://api.github.com/repos/arp242/goatcounter/releases/latest | \
           jq -r ".tag_name" > /tmp/goatcounter-latest-branch-name
@@ -125,9 +132,9 @@ jobs:
       matrix:
         include:
           - arch: amd64
-            platform_image_uri: "${{env.GITLAB_CONTAINER_BASE_URI}}@${{ needs.build-docker-image.outputs.container_digest_amd64 }}"
+            platform_image_uri: "${{needs.build-docker-image.outputs.gitlab_container_base_ur}}@${{ needs.build-docker-image.outputs.container_digest_amd64 }}"
           - arch: arm64
-            platform_image_uri: "${{env.GITLAB_CONTAINER_BASE_URI}}@${{ needs.build-docker-image.outputs.container_digest_arm64 }}"
+            platform_image_uri: "${{needs.build-docker-image.outputs.gitlab_container_base_ur}}@${{ needs.build-docker-image.outputs.container_digest_arm64 }}"
     steps:
 
       - name: Set env REMOTE_BRANCH_NAME
