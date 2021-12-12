@@ -26,7 +26,7 @@ jobs:
       # GH action/scanners for sarif reports
       security-events: write
       statuses: none
-      id-token: read
+      # id-token: 'read'
     outputs:
       remote_branch_name: ${{ steps.get-remote-branch-name.outputs.remote_branch_name }}
       gitlab_container_base_uri: ${{ steps.set-outputs.outputs.gitlab_container_base_uri }}
@@ -125,7 +125,7 @@ jobs:
       # GH action/scanners for sarif reports
       security-events: write
       statuses: none
-      id-token: read
+      # id-token: 'read'
       # id-token: write # needed for signing the images with GitHub OIDC **not production ready**
     strategy:
       # Anchore action produce the same filename for sarif on different platform
@@ -307,7 +307,7 @@ jobs:
       repository-projects: none
       security-events: none
       statuses: none
-      id-token: read
+      # id-token: 'read'
     steps:
       - name: Set env REMOTE_BRANCH_NAME
         run: |
