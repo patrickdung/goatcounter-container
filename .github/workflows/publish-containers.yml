@@ -108,7 +108,7 @@ jobs:
           cosign sign --recursive --key ./cosign.key "${{env.GITLAB_CONTAINER_BASE_URI}}:${{ env.REMOTE_BRANCH_NAME }}"
 
   build-sbom-and-scanning:
-    needs: [build-docker-image]
+    needs: [build-docker-images]
     name: Build SBOM and image scanning
     runs-on: ubuntu-latest
     continue-on-error: true
