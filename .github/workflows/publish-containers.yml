@@ -10,7 +10,7 @@ on:
 env:
   GITLAB_CONTAINER_BASE_URI: registry.gitlab.com/patrickdung/docker-images/goatcounter
 jobs:
-  build-docker-images:
+  build-docker-image:
     name: Build Docker Images
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -108,7 +108,7 @@ jobs:
           cosign sign --recursive --key ./cosign.key "${{env.GITLAB_CONTAINER_BASE_URI}}:${{ env.REMOTE_BRANCH_NAME }}"
 
   build-sbom-and-scanning:
-    needs: [build-docker-images]
+    needs: [build-docker-image]
     name: Build SBOM and image scanning
     runs-on: ubuntu-latest
     continue-on-error: true
