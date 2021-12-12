@@ -80,9 +80,10 @@ jobs:
             RELEASE_VERSION=${{ env.REMOTE_BRANCH_NAME }}
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: |
-            registry.gitlab.com/patrickdung/docker-images/goatcounter:${{ env.REMOTE_BRANCH_NAME }}
             # #registry.gitlab.com/patrickdung/docker-images/goatcounter:latest
+            # registry.gitlab.com/patrickdung/docker-images/goatcounter:${{ env.REMOTE_BRANCH_NAME }}
+          tags: |
+            ${{env.GITLAB_CONTAINER_BASE_URI}}:${{ env.REMOTE_BRANCH_NAME }}
 
       - name: "Get the digest of container (amd64)"
         id: get-container-digest-amd64
