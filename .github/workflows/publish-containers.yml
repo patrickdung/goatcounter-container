@@ -6,7 +6,6 @@ on:
       - main
     # paths:
     #  - 'release-versions/*'
-
 env:
   GITLAB_CONTAINER_BASE_URI: registry.gitlab.com/patrickdung/docker-images/goatcounter
 jobs:
@@ -29,47 +28,40 @@ jobs:
       # id-token: 'read'
     outputs:
       remote_branch_name: ${{ steps.get-remote-branch-name.outputs.remote_branch_name }}
-      gitlab_container_base_uri: ${{ steps.set-outputs.outputs.gitlab_container_base_uri }}
+      gitlab_container_base_uri: ${{ steps.set-env.outputs.gitlab_container_base_uri }}
       container_digest_amd64: ${{ steps.get-container-digest-amd64.outputs.container_digest }}
       container_digest_arm64: ${{ steps.get-container-digest-arm64.outputs.container_digest }}
     steps:
-      - name: Set outputs for this job
-        id: set-outputs
+      - name: Set env for later jobs
+        id: set-env
         run: |
           echo "::set-output name=gitlab_container_base_uri::$(echo $GITLAB_CONTAINER_BASE_URI)"
-
-      - name: Fetch branch name (tag) of latest release
+      - name: Get branch name (tag) of latest release from official repo
         id: get-remote-branch-name
         run: |
           curl -sL https://api.github.com/repos/arp242/goatcounter/releases/latest | \
           jq -r ".tag_name" > /tmp/goatcounter-latest-branch-name
           echo "REMOTE_BRANCH_NAME=$(cat /tmp/goatcounter-latest-branch-name)" >> $GITHUB_ENV
           echo "::set-output name=remote_branch_name::$(cat /tmp/goatcounter-latest-branch-name)"
-
-      - name: Checkout repository (to get Dockerfile for building)
+      - name: Checkout this repository (to get Dockerfile for building)
         uses: actions/checkout@v2
         with:
           # repository: patrickdung/goatcounter-container
           ref: main
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-
       - name: Login to container registry provider
         uses: docker/login-action@v1
         with:
           registry: registry.gitlab.com
           username: ${{ secrets.GITLAB_USERNAME }}
           password: ${{ secrets.GITLAB_TOKEN }}
-
       - name: Install Cosign GH action
         uses: sigstore/cosign-installer@main
         # with:
         #  cosign-release: 'v1.4.1'
-
       - name: Build and push to container registry
         uses: docker/build-push-action@v2
         with:
@@ -80,7 +72,6 @@ jobs:
             RELEASE_VERSION=${{ env.REMOTE_BRANCH_NAME }}
           platforms: linux/amd64,linux/arm64
           push: true
-            # #registry.gitlab.com/patrickdung/docker-images/goatcounter:latest
             # registry.gitlab.com/patrickdung/docker-images/goatcounter:${{ env.REMOTE_BRANCH_NAME }}
           tags: |
             ${{env.GITLAB_CONTAINER_BASE_URI}}:${{ env.REMOTE_BRANCH_NAME }}
@@ -104,7 +95,6 @@ jobs:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PRIVATE_KEY_PASSWORD }}
         run: |
           echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
-          ## CONTAINER_IMAGE="${{env.GITLAB_CONTAINER_BASE_URI}}:${{ env.REMOTE_BRANCH_NAME }}"
           # Sign the multiarch images, the signature is also pushed to the registry
           cosign sign --recursive --key ./cosign.key "${{env.GITLAB_CONTAINER_BASE_URI}}:${{ env.REMOTE_BRANCH_NAME }}"
 
@@ -178,7 +168,6 @@ jobs:
 
       - name: Use Syft to generate the SBOM files
         run: |
-          ## syft -v "registry.gitlab.com/patrickdung/docker-images/meilisearch:${{ env.REMOTE_BRANCH_NAME }}" -o json > ./${{env.ANCHORE_SBOM_ACTION_PRIOR_ARTIFACT}}
           syft -v ${{matrix.platform_image_uri}} -o json > ./${{matrix.arch}}-${{env.ANCHORE_SBOM_ACTION_PRIOR_ARTIFACT}}
 
       - name: Upload SBOM files to release
@@ -220,8 +209,8 @@ jobs:
       - name: Scan container by Grype
         run: |
           # May set a severity threshold for failing the build
-          grype sbom:./${{matrix.arch}}-${{env.ANCHORE_SBOM_ACTION_PRIOR_ARTIFACT}} -o json > ./${{matrix.arch}}-vulnerabilities-report-grype.json
-          grype sbom:./${{matrix.arch}}-${{env.ANCHORE_SBOM_ACTION_PRIOR_ARTIFACT}} -o table > ./${{matrix.arch}}-vulnerabilities-report-grype-table.txt
+          grype sbom:./${{matrix.arch}}-${{env.ANCHORE_SBOM_ACTION_PRIOR_ARTIFACT}} -o json > ./${{matrix.arch}}-container-vulnerabilities-report-grype.json
+          grype sbom:./${{matrix.arch}}-${{env.ANCHORE_SBOM_ACTION_PRIOR_ARTIFACT}} -o table > ./${{matrix.arch}}-container-vulnerabilities-report-grype-table.txt
 
       - name: Upload Grype reports to artifacts
         uses: actions/upload-artifact@v2
@@ -292,7 +281,7 @@ jobs:
             ./*.sarif
 
   build-tag-latest:
-    needs: [build-docker-image,build-sbom-and-scanning]
+    needs: [build-docker-image, build-sbom-and-scanning]
     name: Tag the latest containers
     runs-on: ubuntu-latest
     continue-on-error: true
