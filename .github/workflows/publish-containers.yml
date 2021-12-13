@@ -234,13 +234,13 @@ jobs:
           image-ref: '${{matrix.platform_image_uri}}'
           format: 'template'
           template: '@/contrib/sarif.tpl'
-          output: '${{matrix.arch}}-trivy-results.sarif'
+          output: '${{matrix.arch}}-container-trivy-results.sarif'
           severity: 'CRITICAL,HIGH'
 
       - name: Upload Trivy SARIF report to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: '${{matrix.arch}}-trivy-results.sarif'
+          sarif_file: '${{matrix.arch}}-container-trivy-results.sarif'
           category: trivy-${{matrix.arch}}
 
       - name: Scan container by Anchore
@@ -254,7 +254,7 @@ jobs:
 
       - name: Rename results.sarif with architecture name
         run: |
-          mv results.sarif ${{matrix.arch}}-anchore-results.sarif
+          mv results.sarif ${{matrix.arch}}-container-anchore-results.sarif
 
       - name: Upload Anchore SARIF report to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v1
@@ -262,14 +262,14 @@ jobs:
           # the steps outputs would contain './'
           # ##sarif_file: ${{matrix.arch}}-${{ steps.scan-by-anchore-${{matrix.arch}}.outputs.sarif }}
           # sarif_file: anchore-${{matrix.arch}}-${{ steps.scan-by-anchore.outputs.sarif }}
-          sarif_file: ./${{matrix.arch}}-anchore-results.sarif
+          sarif_file: ./${{matrix.arch}}-container-anchore-results.sarif
           category: anchore-${{matrix.arch}}
 
       - name: Inspect SARIF report(s)
         run: |
           echo ${{matrix.arch}}
-          cat ${{matrix.arch}}-trivy-results.sarif
-          cat ${{matrix.arch}}-anchore-results.sarif
+          cat ${{matrix.arch}}-container-trivy-results.sarif
+          cat ${{matrix.arch}}-container-anchore-results.sarif
 
       - name: Upload SARIF reports to artifacts
         uses: actions/upload-artifact@v2
