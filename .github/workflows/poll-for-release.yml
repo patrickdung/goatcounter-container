@@ -17,7 +17,7 @@ jobs:
       - name: Check for modified files
         id: git-check
         run: |
-          echo ::set-output name=modified::$( if [ "${{ env.REMOTE_BRANCH_NAME }}" != "${{ env.LOCAL_BRANCH_NAME }}" ]; then echo "true"; else echo "false"; fi )
+          echo ::set-output name=modified::$( if [ "${{ env.REMOTE_BRANCH_NAME}}" != "null" ] && [ "${{ env.REMOTE_BRANCH_NAME }}" != "${{ env.LOCAL_BRANCH_NAME }}" ]; then echo "true"; else echo "false"; fi )
       - uses: actions/checkout@v2
         with:
           # https://github.community/t/push-from-action-even-with-pat-does-not-trigger-action/17622/5
@@ -34,6 +34,7 @@ jobs:
           ## By default GH actions push cannot trigger another GH action
           ##git push
       - name: Push changes
+        if: steps.git-check.outputs.modified == 'true'
         uses: ad-m/github-push-action@master
         with:
           repository: patrickdung/goatcounter-container
