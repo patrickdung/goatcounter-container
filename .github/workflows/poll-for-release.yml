@@ -14,6 +14,7 @@ jobs:
           echo "REMOTE_BRANCH_NAME=$(cat /tmp/goatcounter-latest-branch-name)" >> $GITHUB_ENV
           curl -sL https://github.com/patrickdung/goatcounter-container/raw/main/release-versions/goatcounter-latest.txt -o /tmp/goatcounter-local-branch-name
           echo "LOCAL_BRANCH_NAME=$(cat /tmp/goatcounter-local-branch-name)" >> $GITHUB_ENV
+          if [ $(cat /tmp/goatcounter-latest-branch-name) == "null" ] || [ $(cat /tmp/goatcounter-latest-branch-name) == null ] || [ $(cat /tmp/goatcounter-latest-branch-name) == "" ] || [ -z /tmp/goatcounter-latest-branch-name ] ; then exit 1 ; else echo "Remote Branch Name is not null"; fi
       - name: Check for modified files
         id: git-check
         run: |

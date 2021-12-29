@@ -20,3 +20,8 @@ Source code from other repo(s) or application(s):
 Source license: MIT License
 https://github.com/baethon/docker-goatcounter/
 For Dockerfile, entrypoint.sh and goatcounter.sh
+
+2)
+Source license: Apache-2.0 License
+The part for using cosign inside the GitHub actions is referenced from Kyverno
+https://github.com/kyverno/kyverno
