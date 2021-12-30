@@ -101,7 +101,7 @@ jobs:
             ##  ARCH=${{ env.TO_BE_FIXED }}
             RELEASE_VERSION=${{ env.REMOTE_BRANCH_NAME }}
             LABEL_IMAGE_URL=${{ env.ORIGINAL_SOURCECODE_URL }}
-            LABEL_IMAGE_SOURCE=${{ github.repository }}
+            LABEL_IMAGE_SOURCE=https://github.com/${{ github.repository }}
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
