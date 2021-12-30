@@ -24,6 +24,12 @@ RUN set -eux && \
 
 FROM quay.io/almalinux/8-minimal:8.5
 
+ARG LABEL_IMAGE_URL
+ARG LABEL_IMAGE_SOURCE
+
+LABEL org.opencontainers.image.url=${LABEL_IMAGE_URL}
+LABEL org.opencontainers.image.source=${LABEL_IMAGE_SOURCE}
+
 RUN set -eux && \
     microdnf module disable postgresql:10 && \
     microdnf module enable postgresql:13 && \

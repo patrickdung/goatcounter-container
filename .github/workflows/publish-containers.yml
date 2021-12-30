@@ -13,6 +13,7 @@ env:
   CONTAINER_REGISTRY: ghcr.io
   # ## GH Repository must be lower case, when using in GH action
   CONTAINER_REPOSITORY: ${{ github.repository }}
+  ORIGINAL_SOURCECODE_URL: https://github.com/arp242/goatcounter
 jobs:
   init-env:
     name: Set env outputs
@@ -99,6 +100,8 @@ jobs:
           build-args: |
             ##  ARCH=${{ env.TO_BE_FIXED }}
             RELEASE_VERSION=${{ env.REMOTE_BRANCH_NAME }}
+            LABEL_IMAGE_URL=${{ env.ORIGINAL_SOURCECODE_URL }}
+            LABEL_IMAGE_SOURCE=${{ github.repository }}
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
