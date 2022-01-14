@@ -14,7 +14,7 @@ jobs:
       - name: Fetch branch name of latest version
         run: |
           curl -sL https://api.github.com/repos/arp242/goatcounter/releases/latest | \
-            jq -r ".tag_name" > /tmp/goatcounter-latest-branch-name
+            jq -r ".[].tag_name" | grep -v rc | sort -nr -t. -k 1 -k 2 -k 3 | head -n 1 > /tmp/goatcounter-latest-branch-name
           echo "REMOTE_BRANCH_NAME=$(cat /tmp/goatcounter-latest-branch-name)" >> $GITHUB_ENV
           curl -sL https://github.com/patrickdung/goatcounter-container/raw/main/release-versions/goatcounter-latest.txt -o /tmp/goatcounter-local-branch-name
           echo "LOCAL_BRANCH_NAME=$(cat /tmp/goatcounter-local-branch-name)" >> $GITHUB_ENV
