@@ -62,7 +62,8 @@ EXPOSE 8080/tcp
 
 ENV GOATCOUNTER_LISTEN 0.0.0.0:8080
 ENV GOATCOUNTER_TLS http
-ENV GOATCOUNTER_DB 'sqlite://db/goatcounter.sqlite3?_busy_timeout=200&_journal_mode=wal&cache=shared'
+#ENV GOATCOUNTER_DB 'sqlite://db/goatcounter.sqlite3?_busy_timeout=200&_journal_mode=wal&cache=shared'
+ENV GOATCOUNTER_DB 'sqlite+db/goatcounter.sqlite3?_busy_timeout=200&_journal_mode=wal&cache=shared'
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/home/goatcounter/bin/goatcounter.sh"]
