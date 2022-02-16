@@ -69,7 +69,7 @@ jobs:
         id: get-remote-branch-name
         run: |
           curl -sL https://api.github.com/repos/arp242/goatcounter/releases | \
-            jq -r ".tag_name" | grep -v rc | sort -r -V | head -n 1 > /tmp/goatcounter-latest-branch-name
+            jq -r ".[].tag_name" | grep -v rc | sort -r -V | head -n 1 > /tmp/goatcounter-latest-branch-name
           echo "REMOTE_BRANCH_NAME=$(cat /tmp/goatcounter-latest-branch-name)" >> $GITHUB_ENV
           echo "::set-output name=remote_branch_name::$(cat /tmp/goatcounter-latest-branch-name)"
       - name: Checkout this repository (to get Dockerfile for building)
