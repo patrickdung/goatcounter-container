@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: Apache-2.0
 #
-# Copyright (c) 2021 Patrick Dung
+# Copyright (c) 2021-2022 Patrick Dung
 
-FROM docker.io/golang:1.17-bullseye AS build
+FROM docker.io/golang:1.18-bullseye AS build
 
 ARG ARCH
 ## With Docker's buildx, TARGETARCH gives out amd64/arm64
@@ -22,7 +22,7 @@ RUN set -eux && \
       ./cmd/goatcounter && \
     pwd && ls -lR
 
-FROM quay.io/almalinux/8-minimal:8.5
+FROM quay.io/almalinux/8-minimal:8.6
 
 ARG LABEL_IMAGE_URL
 ARG LABEL_IMAGE_SOURCE
