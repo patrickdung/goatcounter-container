@@ -33,7 +33,7 @@ LABEL org.opencontainers.image.source=${LABEL_IMAGE_SOURCE}
 RUN set -eux && \
     microdnf module disable postgresql:10 && \
     microdnf module enable postgresql:13 && \
-    microdnf --nodocs -y install shadow-utils tar postgresql && \
+    microdnf --nodocs -y install shadow-utils tar postgresql sqlite-libs && \
     microdnf -y upgrade && \
     microdnf clean all && \
     rm -rf /var/cache/yum && \
@@ -63,7 +63,7 @@ EXPOSE 8080/tcp
 ENV GOATCOUNTER_LISTEN 0.0.0.0:8080
 ENV GOATCOUNTER_TLS http
 #ENV GOATCOUNTER_DB 'sqlite://db/goatcounter.sqlite3?_busy_timeout=200&_journal_mode=wal&cache=shared'
-ENV GOATCOUNTER_DB 'sqlite+db/goatcounter.sqlite3?_busy_timeout=200&_journal_mode=wal&cache=shared'
+#ENV GOATCOUNTER_DB 'sqlite+db/goatcounter.sqlite3?_busy_timeout=200&_journal_mode=wal&cache=shared'
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/home/goatcounter/bin/goatcounter.sh"]
