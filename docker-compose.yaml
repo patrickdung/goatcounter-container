@@ -3,10 +3,13 @@ version: "3.9"
 services:
   service-goatcounter:
     #image: patrickdung/goatcounter:v2.1.0
-    image: patrickdung/goatcounter:latest
-    pull_policy: always
+    #image: patrickdung/goatcounter:latest
+    image: ghcr.io/patrickdung/goatcounter-container:v2.4.1@sha256:40788552989bbdc8dd3c5aea1cd9b2367447f2673b1aac2e16e0452eca78d39b
+    #pull_policy: always
     container_name: "container-goatcounter"
     hostname: "container-goatcounter"
+    #entrypoint: /usr/bin/sleep
+    #command: [3600]
     env_file:
       - .env
     environment:
@@ -17,11 +20,13 @@ services:
       - GOATCOUNTER_VHOST=analytics.example.org
       - GOATCOUNTER_ADMIN_EMAIL=email@example.org
       # use .env
-      #- GOATCOUNTER_PASSWORD=password
-      - GOATCOUNTER_PASSWORD=${GOATCOUNTER_PASSWORD:?GOATCOUNTER_PASSWORD not set}
+      - GOATCOUNTER_PASSWORD=password
+      #- GOATCOUNTER_PASSWORD=${GOATCOUNTER_PASSWORD:?GOATCOUNTER_PASSWORD not set}
       # --------- 
       # default SQLite, change it to use PGSQL
+      #11:52:22 ERROR: WARNING: the connection string for -db changed from "engine://connectString" to "engine+connectString"; the ://-variant will work for now, but will be removed in a future release
       #- GOATCOUNTER_DB=sqlite://db/goatcounter.sqlite3?_busy_timeout=200&_journal_mode=wal&cache=shared
+      - GOATCOUNTER_DB=sqlite+./db/goatcounter.sqlite3?_busy_timeout=200&_journal_mode=wal&cache=shared
       #- GOATCOUNTER_DB=postgresql://
       #- PGHOST=db01
       #- PGPORT=5432
@@ -32,6 +37,6 @@ services:
     volumes:
       - /data/goatcounter/db:/home/goatcounter/db
     ports:
-      - 127.0.0.1:8080:8080
+      - 127.0.0.1:8081:8081
     cap_drop:
       - ALL
