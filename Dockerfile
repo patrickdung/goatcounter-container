@@ -22,7 +22,7 @@ RUN set -eux && \
       ./cmd/goatcounter && \
     pwd && ls -lR
 
-FROM quay.io/almalinuxorg/almalinux:8.7
+#FROM quay.io/almalinuxorg/almalinux:8.7
 FROM quay.io/almalinuxorg/almalinux:9.1
 
 ARG LABEL_IMAGE_URL
