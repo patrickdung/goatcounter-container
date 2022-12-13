@@ -22,8 +22,7 @@ RUN set -eux && \
       ./cmd/goatcounter && \
     pwd && ls -lR
 
-#FROM quay.io/almalinuxorg/almalinux:8.7
-FROM quay.io/almalinuxorg/almalinux:9.1
+FROM quay.io/almalinuxorg/9-minimal:9.1
 
 ARG LABEL_IMAGE_URL
 ARG LABEL_IMAGE_SOURCE
@@ -32,9 +31,11 @@ LABEL org.opencontainers.image.url=${LABEL_IMAGE_URL}
 LABEL org.opencontainers.image.source=${LABEL_IMAGE_SOURCE}
 
 RUN set -eux && \
-    dnf --nodocs -y install shadow-utils tar postgresql && \
-    dnf -y upgrade && \
-    dnf clean all && \
+    microdnf \
+      --nodocs --setopt=install_weak_deps=0 --setopt=keepcache=0 \
+      -y install shadow-utils tar postgresql && \
+    microdnf -y upgrade && \
+    microdnf clean all && \
     rm -rf /var/cache/yum && \
     groupadd \
       --gid 20000 \
