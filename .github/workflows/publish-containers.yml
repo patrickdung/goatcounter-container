@@ -253,6 +253,7 @@ jobs:
         with:
           path: ./*vulnerabilities-report-grype*
           name: "Vulnerabilities reports by Grype"
+          overwrite: true
 
       - name: Upload Grype reports to release
         uses: svenstaro/upload-release-action@v2
@@ -362,6 +363,7 @@ jobs:
             # #${{matrix.arch}}-trivy-results.sarif
             # #${{ steps.scan-by-anchore.outputs.sarif }}
             ./*.sarif
+          overwrite: true
 
   build-tag-latest:
     needs: [init-env, build-docker-image, build-sbom-and-scanning]
