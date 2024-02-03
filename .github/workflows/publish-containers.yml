@@ -73,15 +73,15 @@ jobs:
           echo "REMOTE_BRANCH_NAME=$(cat /tmp/goatcounter-latest-branch-name)" >> $GITHUB_ENV
           echo "remote_branch_name=$(cat /tmp/goatcounter-latest-branch-name)" >> $GITHUB_OUTPUT
       - name: Checkout this repository (to get Dockerfile for building)
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           ref: main
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v3
       - name: Login to Registry provider
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.CONTAINER_REGISTRY }}
           # Quay.io
@@ -95,7 +95,7 @@ jobs:
         with:
           cosign-release: 'v1.13.1'
       - name: Build and push to container registry
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
@@ -165,12 +165,12 @@ jobs:
 
       - name: Checkout this repository
         # some vuln scanner want to have the Dockerfile
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           ref: main
 
       - name: Login to Registry provider
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.CONTAINER_REGISTRY }}
           # Quay.io
@@ -221,7 +221,7 @@ jobs:
 
       # Cannot download if it's not generated as artifact
       # - name: Download the container SBOM artifact
-      #  uses: actions/download-artifact@v2
+      #  uses: actions/download-artifact@v4
       #  with:
       #    #name: container-sbom.spdx.json
       #    name: ${{env.ANCHORE_SBOM_ACTION_PRIOR_ARTIFACT}}
@@ -249,7 +249,7 @@ jobs:
           grype sbom:./${{matrix.arch}}-${{env.ANCHORE_SBOM_ACTION_PRIOR_ARTIFACT}} -o table > ./${{matrix.arch}}-container-vulnerabilities-report-grype-table.txt
 
       - name: Upload Grype reports to artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           path: ./*vulnerabilities-report-grype*
           name: "Vulnerabilities reports by Grype"
@@ -355,7 +355,7 @@ jobs:
       #    cat ${{matrix.arch}}-container-anchore-results.sarif
 
       - name: Upload SARIF reports to artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: "SARIF reports when containers are built"
           path: |
@@ -385,7 +385,7 @@ jobs:
         run: |
           echo "REMOTE_BRANCH_NAME=${{ needs.build-docker-image.outputs.remote_branch_name }}" >> $GITHUB_ENV
       - name: Login to Registry provider
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.CONTAINER_REGISTRY }}
           # Quay.io

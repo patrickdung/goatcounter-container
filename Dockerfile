@@ -22,8 +22,8 @@ RUN set -eux && \
       ./cmd/goatcounter && \
     pwd && ls -lR
 
-#FROM quay.io/almalinuxorg/9-minimal:9.1
-FROM quay.io/almalinuxorg/9-minimal:9
+#FROM quay.io/almalinuxorg/9-minimal:9
+FROM quay.io/rockylinux/rockylinux:9-minimal
 
 ARG LABEL_IMAGE_URL
 ARG LABEL_IMAGE_SOURCE
