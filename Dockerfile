@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2021-2022 Patrick Dung
 
-FROM docker.io/golang:1.22-bookworm AS build
+FROM docker.io/golang:1.21-bookworm AS build
 
 ARG ARCH
 ## With Docker's buildx, TARGETARCH gives out amd64/arm64
@@ -61,10 +61,10 @@ WORKDIR /home/goatcounter
 VOLUME /home/goatcounter/db
 EXPOSE 8080/tcp
 
-ENV GOATCOUNTER_LISTEN 0.0.0.0:8080
-ENV GOATCOUNTER_TLS http
-#ENV GOATCOUNTER_DB 'sqlite://db/goatcounter.sqlite3?_busy_timeout=200&_journal_mode=wal&cache=shared'
-#ENV GOATCOUNTER_DB 'sqlite+db/goatcounter.sqlite3?_busy_timeout=200&_journal_mode=wal&cache=shared'
+ENV GOATCOUNTER_LISTEN=0.0.0.0:8080
+ENV GOATCOUNTER_TLS=http
+#ENV GOATCOUNTER_DB='sqlite://db/goatcounter.sqlite3?_busy_timeout=200&_journal_mode=wal&cache=shared'
+#ENV GOATCOUNTER_DB='sqlite+db/goatcounter.sqlite3?_busy_timeout=200&_journal_mode=wal&cache=shared'
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/home/goatcounter/bin/goatcounter.sh"]
