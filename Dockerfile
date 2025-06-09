@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2021-2022 Patrick Dung
 
-FROM docker.io/golang:1.21-bookworm AS build
+FROM docker.io/golang:1.24-bookworm AS build
 
 ARG ARCH
 ## With Docker's buildx, TARGETARCH gives out amd64/arm64
