@@ -2,7 +2,8 @@
 #
 # Copyright (c) 2021-2022 Patrick Dung
 
-FROM docker.io/golang:1.24-bookworm AS build
+#FROM docker.io/golang:1.24-bookworm AS build
+FROM docker.io/golang:1.25-trixie AS build
 
 ARG ARCH
 ## With Docker's buildx, TARGETARCH gives out amd64/arm64
@@ -23,7 +24,8 @@ RUN set -eux && \
     pwd && ls -lR
 
 #FROM quay.io/almalinuxorg/9-minimal:9
-FROM quay.io/rockylinux/rockylinux:9-minimal
+#FROM quay.io/rockylinux/rockylinux:9-minimal
+FROM quay.io/rockylinux/rockylinux:10-minimal
 
 ARG LABEL_IMAGE_URL
 ARG LABEL_IMAGE_SOURCE
@@ -37,7 +39,7 @@ RUN set -eux && \
       -y install shadow-utils tar postgresql && \
     microdnf -y upgrade && \
     microdnf clean all && \
-    rm -rf /var/cache/yum && \
+    rm -rf /var/cache/dnf /var/cache/yum && \
     groupadd \
       --gid 20000 \
       goatcounter && \
